@@ -1,0 +1,16 @@
+{
+  "targets": {
+    "main.o": {
+      "deps": [],
+      "command": "gcc -c -o main.o main.c"
+    },
+    "greet.o": {
+      "deps": [],
+      "command": "gcc -c -o greet.o greet.c"
+    },
+    "app": {
+      "deps": ["main.o", "greet.o"],
+      "command": "gcc -o app main.o greet.o"
+    }
+  }
+}

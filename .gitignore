@@ -3,3 +3,4 @@ __pycache__
 # Build artifacts
 *.o
 hello
+app
