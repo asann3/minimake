@@ -5,6 +5,8 @@ minimake - シンプルなビルドシステム
 TODO コメントがある箇所を実装してください。
 """
 
+import json
+import subprocess
 import sys
 
 
@@ -18,9 +20,8 @@ def load_build_file(path: str) -> dict:
     Returns:
         パースされた辞書
     """
-    # TODO: ここを実装してください
-    # ヒント: json.load() を使います
-    pass
+    with open(path, "r") as f:
+        return json.load(f)
 
 
 def build_target(config: dict, target: str) -> bool:
@@ -52,11 +53,11 @@ def build_target(config: dict, target: str) -> bool:
     print(f"Building {target}...")
     print(f"  $ {command}")
 
-    # TODO: ここでコマンドを実行してください
-    # ヒント: subprocess.run() を使います
-    # shell=True を指定すると、シェルコマンドとして実行できます
-    # result.returncode が 0 でなければビルド失敗です
-    pass
+    result = subprocess.run(command, shell=True)
+    if result.returncode != 0:
+        print(f"Error: Build failed for target '{target}'", file=sys.stderr)
+        return False
+    return True
 
 
 def main():
@@ -64,13 +65,13 @@ def main():
         print("Usage: minimake <target>... [--file build_file]", file=sys.stderr)
         sys.exit(1)
 
-    # TODO: 引数をパースして、複数のターゲットを順番にビルドできるようにしてください
-    # --file オプションでビルド定義ファイルを指定できるようにしてください
-    #
-    # ヒント:
-    # - targets: ビルドするターゲットのリスト
-    # - build_file: ビルド定義ファイルのパス（デフォルト: "build.json"）
-    pass
+    target = sys.argv[1]
+    build_file = sys.argv[2] if len(sys.argv) > 2 else "build.json"
+
+    config = load_build_file(build_file)
+
+    if not build_target(config, target):
+        sys.exit(1)
 
 
 if __name__ == "__main__":
