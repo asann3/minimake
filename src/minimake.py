@@ -65,13 +65,23 @@ def main():
         print("Usage: minimake <target>... [--file build_file]", file=sys.stderr)
         sys.exit(1)
 
-    target = sys.argv[1]
-    build_file = sys.argv[2] if len(sys.argv) > 2 else "build.json"
+    targets = []
+    build_file = "build.json"
+
+    i = 1
+    while i < len(sys.argv):
+        if sys.argv[i] == "--file" and i + 1 < len(sys.argv):
+            build_file = sys.argv[i + 1]
+            i += 1
+        else:
+            targets.append(sys.argv[i])
+            i += 1
 
     config = load_build_file(build_file)
 
-    if not build_target(config, target):
-        sys.exit(1)
+    for target in targets:
+        if not build_target(config, target):
+            sys.exit(1)
 
 
 if __name__ == "__main__":
